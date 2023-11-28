@@ -11,6 +11,19 @@ All development has been done in IntelliJ, using Java JDK 20.0.2.
 
 These libraries have been included in the `lib/` folder, and should be correctly setup within the IntelliJ project already.
 
+## Config
+
+A `config.json` file is required in the root directory of the repository. An example of its contents can be found below:
+
+```
+{
+  "cardTimeout": 65000,
+  "cardPort": 4,
+  "serverPort": 7359,
+  "serverTimeout":0
+}
+```
+
 ## Todo:
 - [ ] Fix Ingenico `device.cancel();` issue
 - [ ] Add command for getting card reader status
