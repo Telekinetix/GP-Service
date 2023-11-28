@@ -62,7 +62,6 @@ public class IngenicoHandler {
   }
 
   IngenicoTerminalResponse cancelTransaction() throws ApiException {
-    device.cancel();
     return (IngenicoTerminalResponse) device.cancel();
   }
 

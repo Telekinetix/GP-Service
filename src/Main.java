@@ -1,3 +1,4 @@
+import com.global.api.entities.exceptions.ApiException;
 import com.global.api.terminals.ingenico.responses.IngenicoTerminalResponse;
 import com.google.gson.Gson;
 import models.Config;
@@ -108,7 +109,7 @@ public class Main {
 
         String json = gson.toJson(resp) + (char) 4;
         out.write(json.getBytes());
-      } catch (Exception e) {
+      } catch (ApiException | IOException e) {
         // TODO: Handle error
         errorHandler.logError("Error in TransactionHandler");
       }
