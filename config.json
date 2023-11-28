@@ -1,6 +1,0 @@
-{
-  "cardTimeout": 65000,
-  "cardPort": 3,
-  "serverPort": 7359,
-  "serverTimeout":0
-}
