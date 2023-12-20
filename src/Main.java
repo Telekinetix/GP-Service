@@ -68,25 +68,28 @@ public class Main {
     public EPOSMessage waitForMessage() throws IOException {
       byte[] messageByte = new byte[1024];
       StringBuilder dataString = new StringBuilder(1024);
+      EPOSMessage response;
 
       int lastChar = 0;
       do {
         int currentBytesRead = in.read(messageByte);
         if(currentBytesRead>0) {
           dataString.append(new String(messageByte, 0, currentBytesRead, StandardCharsets.UTF_8));
-        }
-        if(!dataString.isEmpty()){
           lastChar = dataString.charAt(dataString.length() - 1);
         }
+//        if(!dataString.isEmpty()){
+//          lastChar = dataString.charAt(dataString.length() - 1);
+//        }
       } while ((lastChar != 3) && (lastChar != 0));
-      String outString = "";
-      if(!dataString.isEmpty()){
-        outString = dataString.substring(0, dataString.length() - 1);
-         }
-      else {
 
+      if(!dataString.isEmpty()){
+        String outString = dataString.substring(0, dataString.length() - 1);
+        response = gson.fromJson(outString, EPOSMessage.class);
+      } else {
+        response = new EPOSMessage(0, "termination", "","");
       }
-      return gson.fromJson(outString, EPOSMessage.class);
+
+      return response;
     }
   }
 
