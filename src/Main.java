@@ -23,6 +23,7 @@ public class Main {
 
     try {
       ServerSocket serverSocket = new ServerSocket(config.serverPort);
+      //Why are we staying in this while loop with a true?
       while (true) {
         new ConnectionHandler(serverSocket.accept(), ingenicoHandler, errorHandler).start();
       }
