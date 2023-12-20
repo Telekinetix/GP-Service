@@ -52,11 +52,16 @@ public class Main {
 
     public void run() {
       System.out.println("Started listening to EPOS");
-      while (true) {
+      boolean loop = true;
+      while (loop) {
         try {
           EPOSMessage msg = waitForMessage();
           System.out.println("Received message: " + msg.type);
-          new TransactionHandler(ingenicoHandler, out, msg, errorHandler).start();
+          if (Objects.equals(msg.type, "closeConnection")) {
+            loop = false; //When we receive this message from 4D, break from loop.
+          }else {
+            new TransactionHandler(ingenicoHandler, out, msg, errorHandler).start();
+          }
         } catch (IOException e) {
           // TODO: Handle error
           errorHandler.logError("Error in ConnectionHandler");
@@ -77,16 +82,13 @@ public class Main {
           dataString.append(new String(messageByte, 0, currentBytesRead, StandardCharsets.UTF_8));
           lastChar = dataString.charAt(dataString.length() - 1);
         }
-//        if(!dataString.isEmpty()){
-//          lastChar = dataString.charAt(dataString.length() - 1);
-//        }
       } while ((lastChar != 3) && (lastChar != 0));
 
       if(!dataString.isEmpty()){
         String outString = dataString.substring(0, dataString.length() - 1);
         response = gson.fromJson(outString, EPOSMessage.class);
       } else {
-        response = new EPOSMessage(0, "termination", "","");
+        response = new EPOSMessage(0, "empty", "","");
       }
 
       return response;
