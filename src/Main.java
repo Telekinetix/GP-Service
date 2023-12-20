@@ -69,13 +69,23 @@ public class Main {
       byte[] messageByte = new byte[1024];
       StringBuilder dataString = new StringBuilder(1024);
 
+      int lastChar = 0;
       do {
         int currentBytesRead = in.read(messageByte);
-        dataString.append(new String(messageByte, 0, currentBytesRead, StandardCharsets.UTF_8));
-      } while (dataString.charAt(dataString.length() - 1) != 3);
+        if(currentBytesRead>0) {
+          dataString.append(new String(messageByte, 0, currentBytesRead, StandardCharsets.UTF_8));
+        }
+        if(!dataString.isEmpty()){
+          lastChar = dataString.charAt(dataString.length() - 1);
+        }
+      } while ((lastChar != 3) && (lastChar != 0));
+      String outString = "";
+      if(!dataString.isEmpty()){
+        outString = dataString.substring(0, dataString.length() - 1);
+         }
+      else {
 
-      String outString = dataString.substring(0, dataString.length() - 1);
-
+      }
       return gson.fromJson(outString, EPOSMessage.class);
     }
   }
