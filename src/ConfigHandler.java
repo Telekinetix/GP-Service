@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import models.Config;
+import models.ErrorType;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,8 +20,10 @@ public class ConfigHandler {
       Gson gson = new Gson();
       return gson.fromJson(content, Config.class);
     } catch (Exception e) {
-      // log error
-      throw new RuntimeException(e);
+      // Crash out of app - Failed to load config file
+      ErrorHandler.error(ErrorType.configError, e, "Failed to load config.");
+      System.exit(1);
+      return null;
     }
   }
 }

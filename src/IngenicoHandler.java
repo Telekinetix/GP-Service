@@ -7,6 +7,7 @@ import com.global.api.terminals.ingenico.responses.IngenicoTerminalResponse;
 import com.global.api.terminals.ingenico.responses.TerminalStateResponse;
 import com.global.api.terminals.ingenico.variables.PaymentMode;
 import models.Config;
+import models.ErrorType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,7 +21,6 @@ public class IngenicoHandler {
   IngenicoHandler(Config config, ErrorHandler errorHandler) {
     setConfig(config);
     this.errorHandler = errorHandler;
-    this.connectToDevice();
   }
 
   void setConfig(Config config) {
@@ -43,22 +43,24 @@ public class IngenicoHandler {
       try {
         out.write(msgToSend.getBytes());
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        // Logs error locally if the socket dies.
+        errorHandler.error(ErrorType.socketError, e, "Socket died while sending message to EPOS");
       }
     });
   }
 
-  void connectToDevice() {
+  IngenicoHandler connectToDevice() {
     try {
       this.device = DeviceService.create(this.config);
     } catch (ApiException e) {
-      // TODO: Handle error
-      throw new RuntimeException(e);
+      // Logs error locally if unable to connect to ingenico device
+      errorHandler.error(ErrorType.ingenicoDeviceNotConnected, e, "Failed to connect to Ingenico device");
     }
+    return this;
   }
 
   IngenicoTerminalResponse getStatus() throws ApiException {
-    return (TerminalStateResponse) device.getTerminalStatus();
+    return (IngenicoTerminalResponse) device.getTerminalStatus();
   }
 
   IngenicoTerminalResponse cancelTransaction() throws ApiException {
