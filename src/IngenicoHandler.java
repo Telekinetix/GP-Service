@@ -57,8 +57,8 @@ public class IngenicoHandler {
     }
   }
 
-  void getStatus() throws ApiException {
-    TerminalStateResponse r = (TerminalStateResponse) device.getTerminalStatus();
+  IngenicoTerminalResponse getStatus() throws ApiException {
+    return (TerminalStateResponse) device.getTerminalStatus();
   }
 
   IngenicoTerminalResponse cancelTransaction() throws ApiException {

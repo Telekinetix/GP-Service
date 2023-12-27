@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import models.Config;
 import models.EPOSMessage;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,15 +14,28 @@ import java.util.Objects;
 public class Main {
   private static final Gson gson = new Gson();
   public static void main(String[] args) {
+
+    try {
+      FileWriter myWriter = new FileWriter("filename.txt");
+      myWriter.write("Service started");
+      myWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     ErrorHandler errorHandler = new ErrorHandler();
     Config config = new ConfigHandler(errorHandler).loadConfig();
     IngenicoHandler ingenicoHandler = new IngenicoHandler(config, errorHandler);
 
     try {
       ServerSocket serverSocket = new ServerSocket(config.serverPort);
-      //Why are we staying in this while loop with a true?
       while (true) {
-        new ConnectionHandler(serverSocket.accept(), ingenicoHandler, errorHandler).start();
+        try {
+          new ConnectionHandler(serverSocket.accept(), ingenicoHandler, errorHandler).start();
+        }
+        catch (IOException e) {
+          throw new RuntimeException(e);
+        }
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
