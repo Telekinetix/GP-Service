@@ -33,3 +33,5 @@ config.json
 build/jre/*
 build/*.jar
 build/logs/*
+GP-Service.iml
+.idea/misc.xml
