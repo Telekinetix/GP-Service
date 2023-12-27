@@ -70,6 +70,8 @@ public class Main {
         } catch (IOException e) {
           // Logs error locally if the socket dies.
           ErrorHandler.error(ErrorType.socketError, e, "Socket died while receiving message from EPOS");
+          ingenicoHandler.emergencyCancelTransaction();
+          return;
         }
       }
     }

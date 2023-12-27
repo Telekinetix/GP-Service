@@ -65,6 +65,14 @@ public class IngenicoHandler {
     return (IngenicoTerminalResponse) device.cancel();
   }
 
+  void emergencyCancelTransaction() {
+    try {
+      if (this.device != null) this.cancelTransaction();
+    } catch (ApiException e) {
+      ErrorHandler.error(ErrorType.ingenicoGenericError, e, "Failed to cancel ongoing transaction upon socket death");
+    }
+  }
+
   IngenicoTerminalResponse doSale(BigDecimal amount, Integer ref) throws ApiException {
     return (IngenicoTerminalResponse) device.sale(amount)
         .withReferenceNumber(ref)

@@ -17,7 +17,7 @@ public class ErrorHandler {
   }
 
   static byte[] buildErrorObject(ErrorType type, String message) {
-    return ("{\"err\": \"" + type.name() + "\""+ (!message.isEmpty() ? "\"message\": \"" + message + "\"" : "")+ "}"
+    return ("{\"err\": \"" + type.name() + "\""+ (!message.isEmpty() ? ", \"message\": \"" + message + "\"" : "")+ "}"
             + (char) 4).getBytes();
   }
 }
