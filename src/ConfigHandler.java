@@ -19,13 +19,6 @@ public class ConfigHandler {
       Gson gson = new Gson();
       return gson.fromJson(content, Config.class);
     } catch (Exception e) {
-      try {
-        FileWriter myWriter = new FileWriter("error.txt");
-        myWriter.write("Failed to find config");
-        myWriter.close();
-      } catch (IOException f) {
-        f.printStackTrace();
-      }
       // log error
       throw new RuntimeException(e);
     }

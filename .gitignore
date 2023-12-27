@@ -31,3 +31,4 @@ config.json
 
 
 build/jre/*
+build/*.jar

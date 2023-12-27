@@ -1,0 +1,15 @@
+<service>
+  <id>gp-service</id>
+  <name>GP-Service</name>
+  <description>This service runs the EPOS Global Payments gateway system.</description>
+  <executable>%BASE%\jre\bin\java.exe</executable>
+  <arguments>-jar "%BASE%\GP-Service.jar"</arguments>
+  <log mode="roll-by-size">
+    <sizeThreshold>1024</sizeThreshold>
+    <keepFiles>8</keepFiles>
+  </log>
+  <onfailure action="restart" delay="5 sec"/>
+  <onfailure action="restart" delay="5 sec"/>
+  <onfailure action="none" />
+  <resetfailure>10 min</resetfailure>
+</service>
