@@ -16,50 +16,46 @@ public class Main {
   private static final Gson gson = new Gson();
 
   public static void main(String[] args) {
-    ErrorHandler errorHandler = new ErrorHandler();
-    Config config = new ConfigHandler(errorHandler).loadConfig();
-    IngenicoHandler ingenicoHandler = new IngenicoHandler(config, errorHandler).connectToDevice();
+    Config config = new ConfigHandler().loadConfig();
+    IngenicoHandler ingenicoHandler = new IngenicoHandler(config).connectToDevice();
 
     try {
       ServerSocket serverSocket = new ServerSocket(config.serverPort);
       while (true) {
-        waitForConnection(serverSocket, ingenicoHandler, errorHandler);
+        waitForConnection(serverSocket, ingenicoHandler);
       }
     } catch (IOException e) {
       // Crash out of app - Likely failed to bind to port
-      errorHandler.error(ErrorType.socketError, e, "Likely failed to bind to port");
+      ErrorHandler.error(ErrorType.socketError, e, "Likely failed to bind to port");
       System.exit(1);
     }
   }
 
-  public static void waitForConnection(ServerSocket serverSocket, IngenicoHandler ingenicoHandler, ErrorHandler errorHandler) {
-    if (ingenicoHandler.device == null) ingenicoHandler.connectToDevice();
-
+  public static void waitForConnection(ServerSocket serverSocket, IngenicoHandler ingenicoHandler) {
     try {
-      new ConnectionHandler(serverSocket.accept(), ingenicoHandler, errorHandler).start();
+      new ConnectionHandler(serverSocket.accept(), ingenicoHandler).start();
     }
     catch (IOException e) {
       // Logs error locally if the socket dies.
-      errorHandler.error(ErrorType.socketError, e, "Socket died while connecting to EPOS");
+      ErrorHandler.error(ErrorType.socketError, e, "Socket died while connecting to EPOS");
     }
   }
 
   private static class ConnectionHandler extends Thread {
     private final IngenicoHandler ingenicoHandler;
-    private final ErrorHandler errorHandler;
     DataOutputStream out;
     DataInputStream in;
 
-    public ConnectionHandler(Socket socket, IngenicoHandler ingenicoHandler, ErrorHandler errorHandler) {
+    public ConnectionHandler(Socket socket, IngenicoHandler ingenicoHandler) {
       this.ingenicoHandler = ingenicoHandler;
-      this.errorHandler = errorHandler;
+      if (this.ingenicoHandler.device == null) this.ingenicoHandler.connectToDevice();
 
       try {
         out = new DataOutputStream(socket.getOutputStream());
         in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
       } catch (IOException e) {
         // Logs error locally if the socket dies.
-        errorHandler.error(ErrorType.socketError, e, "Socket died while connecting to EPOS");
+        ErrorHandler.error(ErrorType.socketError, e, "Socket died while connecting to EPOS");
       }
     }
 
@@ -70,10 +66,10 @@ public class Main {
           EPOSMessage msg = waitForMessage();
           if (msg == null || Objects.equals(msg.type, "closeConnection")) break; //When we receive this message from 4D, break from loop.
 
-          new MessageHandler(ingenicoHandler, out, msg, errorHandler).start();
+          new MessageHandler(ingenicoHandler, out, msg).start();
         } catch (IOException e) {
           // Logs error locally if the socket dies.
-          errorHandler.error(ErrorType.socketError, e, "Socket died while receiving message from EPOS");
+          ErrorHandler.error(ErrorType.socketError, e, "Socket died while receiving message from EPOS");
         }
       }
     }
@@ -102,13 +98,11 @@ public class Main {
     private final IngenicoHandler ingenicoHandler;
     private final EPOSMessage msg;
     private final DataOutputStream out;
-    private final ErrorHandler errorHandler;
 
-    public MessageHandler(IngenicoHandler ingenicoHandler, DataOutputStream out, EPOSMessage msg, ErrorHandler errorHandler) {
+    public MessageHandler(IngenicoHandler ingenicoHandler, DataOutputStream out, EPOSMessage msg) {
       this.ingenicoHandler = ingenicoHandler;
       this.out = out;
       this.msg = msg;
-      this.errorHandler = errorHandler;
     }
 
     public void run() {
@@ -118,7 +112,7 @@ public class Main {
       try {
 
         if (this.ingenicoHandler.device == null) {
-          postToEPOS(errorHandler.buildErrorObject(ErrorType.ingenicoDeviceNotConnected));
+          postToEPOS(ErrorHandler.buildErrorObject(ErrorType.ingenicoDeviceNotConnected));
           return;
         }
 
@@ -136,8 +130,8 @@ public class Main {
         postToEPOS(json.getBytes());
       } catch (ApiException e) {
         // Logs ingenico error locally and to the EPOS socket
-        errorHandler.error(ErrorType.ingenicoGenericError, e);
-        postToEPOS(errorHandler.buildErrorObject(ErrorType.ingenicoGenericError, e.getMessage()));
+        ErrorHandler.error(ErrorType.ingenicoGenericError, e);
+        postToEPOS(ErrorHandler.buildErrorObject(ErrorType.ingenicoGenericError, e.getMessage()));
       }
     }
 
@@ -145,7 +139,7 @@ public class Main {
       try {
         out.write(data);
       } catch (IOException e) {
-        errorHandler.error(ErrorType.socketError, e); // Logs error locally if the socket dies.
+        ErrorHandler.error(ErrorType.socketError, e); // Logs error locally if the socket dies.
       }
     }
   }

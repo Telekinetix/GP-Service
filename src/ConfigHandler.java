@@ -8,11 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ConfigHandler {
-  public ErrorHandler ErrorHandler;
-
-  public ConfigHandler(ErrorHandler errorHandler) {
-    this.ErrorHandler = errorHandler;
-  }
 
   Config loadConfig() {
     try {

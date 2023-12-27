@@ -16,11 +16,9 @@ import java.math.BigDecimal;
 public class IngenicoHandler {
   ConnectionConfig config;
   IDeviceInterface device;
-  ErrorHandler errorHandler;
 
-  IngenicoHandler(Config config, ErrorHandler errorHandler) {
+  IngenicoHandler(Config config) {
     setConfig(config);
-    this.errorHandler = errorHandler;
   }
 
   void setConfig(Config config) {
@@ -44,7 +42,7 @@ public class IngenicoHandler {
         out.write(msgToSend.getBytes());
       } catch (IOException e) {
         // Logs error locally if the socket dies.
-        errorHandler.error(ErrorType.socketError, e, "Socket died while sending message to EPOS");
+        ErrorHandler.error(ErrorType.socketError, e, "Socket died while sending message to EPOS");
       }
     });
   }
@@ -54,7 +52,7 @@ public class IngenicoHandler {
       this.device = DeviceService.create(this.config);
     } catch (ApiException e) {
       // Logs error locally if unable to connect to ingenico device
-      errorHandler.error(ErrorType.ingenicoDeviceNotConnected, e, "Failed to connect to Ingenico device");
+      ErrorHandler.error(ErrorType.ingenicoDeviceNotConnected, e, "Failed to connect to Ingenico device");
     }
     return this;
   }
