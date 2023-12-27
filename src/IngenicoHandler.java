@@ -73,20 +73,20 @@ public class IngenicoHandler {
     }
   }
 
-  IngenicoTerminalResponse doSale(BigDecimal amount, Integer ref) throws ApiException {
+  IngenicoTerminalResponse doSale(BigDecimal amount, String currency, Integer ref) throws ApiException {
     return (IngenicoTerminalResponse) device.sale(amount)
         .withReferenceNumber(ref)
         .withPaymentMode(PaymentMode.APPLICATION)
-        .withCurrencyCode("826")
+        .withCurrencyCode(currency)
         .withTicket(true)
         .execute();
   }
 
-  IngenicoTerminalResponse doRefund(BigDecimal amount, Integer ref) throws ApiException {
+  IngenicoTerminalResponse doRefund(BigDecimal amount, String currency, Integer ref) throws ApiException {
     return (IngenicoTerminalResponse) device.refund(amount)
         .withReferenceNumber(ref)
         .withPaymentMode(PaymentMode.APPLICATION)
-        .withCurrencyCode("826")
+        .withCurrencyCode(currency)
         .withTicket(true)
         .execute();
   }

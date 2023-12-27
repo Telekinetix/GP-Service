@@ -119,9 +119,9 @@ public class Main {
         }
 
         if (Objects.equals(msg.type, "Sale")) {
-          resp = ingenicoHandler.doSale(new BigDecimal(msg.value), msg.id);
+          resp = ingenicoHandler.doSale(new BigDecimal(msg.value), msg.currency, msg.id);
         } else if (Objects.equals(msg.type, "Return")) {
-          resp = ingenicoHandler.doRefund(new BigDecimal(msg.value), msg.id);
+          resp = ingenicoHandler.doRefund(new BigDecimal(msg.value), msg.currency, msg.id);
         } else if (Objects.equals(msg.type, "Cancel")) {
           resp = ingenicoHandler.cancelTransaction();
         } else if (Objects.equals(msg.type, "Status")) {
