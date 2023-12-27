@@ -19,16 +19,22 @@ A `config.json` file is required in the root directory of the repository. An exa
 {
   "cardTimeout": 65000,
   "cardPort": 4,
-  "serverPort": 7359,
-  "serverTimeout":0
+  "serverPort": 7359
 }
 ```
 
+## Build
+
+To build the `GP-Service.jar` file from IntelliJ, simply go to `Build/Build Artifacts` and click the `Build` action. This will build `GP-Service.jar` and put it in the `build/` directory.
+
+Once the `GP-Service.jar` file has been built, the `build` directory is ready to be placed on an EPOS system and the service restarted.
+
 ## Todo:
-- [ ] Fix Ingenico `device.cancel();` issue
-- [ ] Add command for getting card reader status
+- [x] Fix Ingenico `device.cancel();` issue
+- [x] Add command for getting card reader status
 - [ ] Add command to trigger a `getTerminalConfiguration` job
-- [ ] Pass currency code through to Ingenico
-- [ ] Error logging & handling
-- [ ] Service wrapper for Java project
-- [ ] Installer for Java service
+- [x] Pass currency code through to Ingenico
+- [x] Error logging & handling
+- [x] Service wrapper for Java project
+- [x] Installer for Java service
+- [ ] Event logging
