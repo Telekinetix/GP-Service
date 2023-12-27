@@ -4,6 +4,7 @@
   <description>This service runs the EPOS Global Payments gateway system.</description>
   <executable>%BASE%\jre\bin\java.exe</executable>
   <arguments>-jar "%BASE%\GP-Service.jar"</arguments>
+  <logpath>%BASE%\logs</logpath>
   <log mode="roll-by-size">
     <sizeThreshold>1024</sizeThreshold>
     <keepFiles>8</keepFiles>

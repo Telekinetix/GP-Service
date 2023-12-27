@@ -32,3 +32,4 @@ config.json
 
 build/jre/*
 build/*.jar
+build/logs/*
