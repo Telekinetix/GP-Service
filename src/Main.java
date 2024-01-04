@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class Main {
@@ -118,6 +120,13 @@ public class Main {
           return;
         }
 
+
+        //Log a timestamp of when this transaction started
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String formattedDate = sdf.format(new Date());
+        //Log the type of transaction we are processing, for reference when checking logs
+        System.out.println(formattedDate + " - " + msg.type + " request from EPOS");
+
         if (Objects.equals(msg.type, "Sale")) {
           resp = ingenicoHandler.doSale(new BigDecimal(msg.value), msg.currency, msg.id);
         } else if (Objects.equals(msg.type, "Return")) {
@@ -129,6 +138,12 @@ public class Main {
         }
 
         String json = gson.toJson(resp) + (char) 4;
+
+        //If processing a cancel transaction from EPOS, log the ingenico response
+        if (Objects.equals(msg.type, "Cancel")) {
+          System.out.println(json);
+        }
+
         postToEPOS(json.getBytes());
       } catch (ApiException e) {
         // Logs ingenico error locally and to the EPOS socket
