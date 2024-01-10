@@ -110,16 +110,15 @@ public class Main {
     }
 
     public void run() {
-      ingenicoHandler.setupCallback(out);
+      if (this.ingenicoHandler.device == null) {
+        postToEPOS(ErrorHandler.buildErrorObject(ErrorType.ingenicoDeviceNotConnected));
+        return;
+      }else {
+        ingenicoHandler.setupCallback(out);
+      }
 
       IngenicoTerminalResponse resp = null;
       try {
-
-        if (this.ingenicoHandler.device == null) {
-          postToEPOS(ErrorHandler.buildErrorObject(ErrorType.ingenicoDeviceNotConnected));
-          return;
-        }
-
 
         //Log a timestamp of when this transaction started
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
