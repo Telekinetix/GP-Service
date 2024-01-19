@@ -3,9 +3,11 @@ import com.global.api.entities.exceptions.ApiException;
 import com.global.api.services.DeviceService;
 import com.global.api.terminals.ConnectionConfig;
 import com.global.api.terminals.abstractions.IDeviceInterface;
+import com.global.api.terminals.ingenico.responses.IngenicoTerminalReportResponse;
 import com.global.api.terminals.ingenico.responses.IngenicoTerminalResponse;
 import com.global.api.terminals.ingenico.responses.TerminalStateResponse;
 import com.global.api.terminals.ingenico.variables.PaymentMode;
+import com.global.api.terminals.ingenico.variables.ReportTypes;
 import models.Config;
 import models.ErrorType;
 
@@ -61,6 +63,9 @@ public class IngenicoHandler {
     return (IngenicoTerminalResponse) device.getTerminalStatus();
   }
 
+  IngenicoTerminalReportResponse getEodReport() throws ApiException {
+    return (IngenicoTerminalReportResponse) device.getReport(ReportTypes.EOD).execute();
+  }
   IngenicoTerminalResponse cancelTransaction() throws ApiException {
     return (IngenicoTerminalResponse) device.cancel();
   }

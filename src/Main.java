@@ -134,6 +134,8 @@ public class Main {
           resp = ingenicoHandler.cancelTransaction();
         } else if (Objects.equals(msg.type, "Status")) {
           resp = ingenicoHandler.getStatus();
+        } else if (Objects.equals(msg.type, "EOD")) {
+          resp = ingenicoHandler.getEodReport();
         }
 
         String json = gson.toJson(resp) + (char) 4;
