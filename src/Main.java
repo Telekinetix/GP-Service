@@ -125,6 +125,8 @@ public class Main {
         String formattedDate = sdf.format(new Date());
         //Log the type of transaction we are processing, for reference when checking logs
         System.out.println(formattedDate + " - " + msg.type + " request from EPOS");
+        String logJson = gson.toJson(msg);
+        System.out.println(logJson);
 
         if (Objects.equals(msg.type, "Sale")) {
           resp = ingenicoHandler.doSale(new BigDecimal(msg.value), msg.currency, msg.id);
