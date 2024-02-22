@@ -14,6 +14,8 @@ import models.ErrorType;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class IngenicoHandler {
   ConnectionConfig config;
@@ -38,8 +40,10 @@ public class IngenicoHandler {
 
   void setupCallback(DataOutputStream out) {
     this.device.setOnBroadcastMessageReceived((code, message) -> {
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+      String formattedDate = sdf.format(new Date());
       String msgToSend = ("{\"code\":\"" + code + "\", \"message\":\"" + message + "\"}" + (char) 3);
-      System.out.println(msgToSend);
+      System.out.println(formattedDate + " - " + msgToSend);
       try {
         out.write(msgToSend.getBytes());
       } catch (IOException e) {

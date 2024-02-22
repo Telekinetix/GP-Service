@@ -143,8 +143,11 @@ public class Main {
         String json = gson.toJson(resp) + (char) 4;
 
         //If processing a cancel transaction from EPOS, log the ingenico response
+        formattedDate = sdf.format(new Date());
         if (Objects.equals(msg.type, "Cancel")) {
-          System.out.println(json);
+          System.out.println(formattedDate + " - " + json);
+        } else {
+          System.out.println(formattedDate + " - " + msg.type + " completed. Sending response to EPOS");
         }
 
         postToEPOS(json.getBytes());
