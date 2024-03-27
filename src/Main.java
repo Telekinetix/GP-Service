@@ -4,12 +4,16 @@ import com.google.gson.Gson;
 import models.Config;
 import models.EPOSMessage;
 import models.ErrorType;
+import models.TransactionLog;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -20,6 +24,9 @@ public class Main {
   public static void main(String[] args) {
     Config config = new ConfigHandler().loadConfig();
     IngenicoHandler ingenicoHandler = new IngenicoHandler(config).connectToDevice();
+
+    //Log tid to service logs
+    System.out.println("tid - " + config.tid);
 
     try {
       ServerSocket serverSocket = new ServerSocket(config.serverPort);
@@ -150,6 +157,8 @@ public class Main {
           System.out.println(formattedDate + " - " + msg.type + " completed. Sending response to EPOS");
         }
 
+        TransactionLog transLog = new TransactionLog(msg, resp);
+
         postToEPOS(json.getBytes());
       } catch (ApiException e) {
         // Logs ingenico error locally and to the EPOS socket
@@ -158,6 +167,25 @@ public class Main {
       }
     }
 
+    public void logTransaction(TransactionLog data) {
+      try {
+
+        String json = gson.toJson(data);
+
+        Path path = Paths.get("\\transactionLogs\\");
+        Files.createDirectories(path);
+
+        String filename = data.eposMessage.saleId.toString() + " - " + data.eposMessage.transId.toString() + ".json";
+        Path logFile = Files.createFile(Path.of("\\transactionLogs\\" + filename));
+        try(FileOutputStream outputStream = new FileOutputStream(logFile.toFile())){
+          outputStream.write(json.getBytes());
+        }
+
+      } catch (Exception e) {
+        ErrorHandler.error(ErrorType.configError, e);
+      }
+
+    }
     public void postToEPOS(byte[] data) {
       try {
         out.write(data);
