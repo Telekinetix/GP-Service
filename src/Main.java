@@ -173,7 +173,7 @@ public class Main {
     public void logTransaction(TransactionLog data) {
       try {
 
-        Path path = Paths.get("\\transactionLogs\\");
+        Path path = Path.of("\\transactionLogs\\");
         Files.createDirectories(path);
 
         String filename = data.eposMessage.saleId.toString() + " - " + data.eposMessage.transId.toString() + ".json";
