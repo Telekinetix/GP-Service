@@ -36,3 +36,4 @@ build/logs/*
 GP-Service.iml
 .idea/misc.xml
 *.zip
+/transactionLogs

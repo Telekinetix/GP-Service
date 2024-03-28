@@ -173,11 +173,11 @@ public class Main {
     public void logTransaction(TransactionLog data) {
       try {
 
-        Path path = Path.of("\\transactionLogs\\");
+        Path path = Path.of("transactionLogs\\");
         Files.createDirectories(path);
 
         String filename = data.eposMessage.saleId.toString() + "-" + data.eposMessage.transId.toString() + ".json";
-        Path logFile = Files.createFile(Path.of("\\transactionLogs\\" + filename));
+        Path logFile = Files.createFile(Path.of("transactionLogs\\" + filename));
         try(FileOutputStream outputStream = new FileOutputStream(logFile.toFile())){
           String json = gson.toJson(data);
           outputStream.write(json.getBytes());
