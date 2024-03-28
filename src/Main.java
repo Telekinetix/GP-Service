@@ -157,11 +157,13 @@ public class Main {
           System.out.println(formattedDate + " - " + msg.type + " completed. Sending response to EPOS");
         }
 
-        TransactionLog transLog = new TransactionLog(msg, resp);
-        String tempJson = gson.toJson(transLog);
-        System.out.println("transLog - "+tempJson);
-        logTransaction(transLog);
-
+        if (Objects.equals(msg.type, "Sale") | Objects.equals(msg.type, "Return")) {
+          TransactionLog transLog = new TransactionLog(msg, resp);
+          String tempJson = gson.toJson(transLog);
+          System.out.println("transLog - " + tempJson);
+          logTransaction(transLog);
+        }
+        
         postToEPOS(json.getBytes());
       } catch (ApiException e) {
         // Logs ingenico error locally and to the EPOS socket
