@@ -158,6 +158,7 @@ public class Main {
         }
 
         TransactionLog transLog = new TransactionLog(msg, resp);
+        logTransaction(transLog);
 
         postToEPOS(json.getBytes());
       } catch (ApiException e) {
@@ -170,14 +171,13 @@ public class Main {
     public void logTransaction(TransactionLog data) {
       try {
 
-        String json = gson.toJson(data);
-
         Path path = Paths.get("\\transactionLogs\\");
         Files.createDirectories(path);
 
         String filename = data.eposMessage.saleId.toString() + " - " + data.eposMessage.transId.toString() + ".json";
         Path logFile = Files.createFile(Path.of("\\transactionLogs\\" + filename));
         try(FileOutputStream outputStream = new FileOutputStream(logFile.toFile())){
+          String json = gson.toJson(data);
           outputStream.write(json.getBytes());
         }
 
