@@ -176,7 +176,7 @@ public class Main {
         Path path = Path.of("\\transactionLogs\\");
         Files.createDirectories(path);
 
-        String filename = data.eposMessage.saleId.toString() + " - " + data.eposMessage.transId.toString() + ".json";
+        String filename = data.eposMessage.saleId.toString() + "-" + data.eposMessage.transId.toString() + ".json";
         Path logFile = Files.createFile(Path.of("\\transactionLogs\\" + filename));
         try(FileOutputStream outputStream = new FileOutputStream(logFile.toFile())){
           String json = gson.toJson(data);
