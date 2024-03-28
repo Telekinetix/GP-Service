@@ -158,6 +158,8 @@ public class Main {
         }
 
         TransactionLog transLog = new TransactionLog(msg, resp);
+        String tempJson = gson.toJson(transLog);
+        System.out.println("transLog - "+tempJson);
         logTransaction(transLog);
 
         postToEPOS(json.getBytes());
