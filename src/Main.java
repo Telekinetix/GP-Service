@@ -160,7 +160,6 @@ public class Main {
         if (Objects.equals(msg.type, "Sale") | Objects.equals(msg.type, "Return")) {
           TransactionLog transLog = new TransactionLog(msg, resp);
           String tempJson = gson.toJson(transLog);
-          System.out.println("transLog - " + tempJson);
           logTransaction(transLog);
         }
         
