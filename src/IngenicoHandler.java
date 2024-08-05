@@ -32,7 +32,8 @@ public class IngenicoHandler {
     this.config.setTimeout(config.cardTimeout);
     this.config.setDeviceType(DeviceType.INGENICO_L3000);
     this.config.setConnectionMode(ConnectionModes.SERIAL);
-    this.config.setBaudRate(BaudRate.r19200);
+//    this.config.setBaudRate(BaudRate.r19200);
+    this.config.setBaudRate(BaudRate.r9600);
     this.config.setDataBits(DataBits.Eight);
     this.config.setParity(Parity.Even);
     this.config.setStopBits(StopBits.One);
