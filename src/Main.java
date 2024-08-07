@@ -147,6 +147,12 @@ public class Main {
           resp = ingenicoHandler.getEodReport();
         }
 
+        formattedDate = sdf.format(new Date());
+
+        if(resp != null) {
+          System.out.println(formattedDate + " - " + resp.getReceipt());
+        }
+        
         String json = gson.toJson(resp) + (char) 4;
 
         //If processing a cancel transaction from EPOS, log the ingenico response
